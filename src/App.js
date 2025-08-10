@@ -1,25 +1,82 @@
-import logo from './logo.svg';
+// src/App.js
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Main from './pages/Main';
+import ProtectedRoute from './components/ProtectedRoutes';
 import './App.css';
 
-function App() {
+
+function Welcome({ navigate, username, handleLogout }) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main className="center-area">
+      <div className="card">
+        {!username ? (
+          <>
+            <h1 className="brand">Coach 21K</h1>
+            <p className="lead">Tu entrenador personal</p>
+
+            <div className="actions">
+              <button className="btn primary" onClick={() => navigate('/login')}>Iniciar sesión</button>
+              <button className="btn ghost" onClick={() => navigate('/register')}>Registrarse</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1 className="brand">¡Hola, {username}!</h1>
+            <p className="lead">Bienvenido de nuevo. Pulsa abajo para acceder a tu plan.</p>
+
+            <div className="actions">
+              <button className="btn primary" onClick={() => navigate('/main')}>Ir al panel</button>
+              <button className="btn ghost" onClick={handleLogout}>Cerrar sesión</button>
+            </div>
+          </>
+        )}
+      </div>
+    </main>
+  );
+}
+// AppWrapper usa useNavigate (está dentro del Router)
+function AppWrapper() {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState(() => localStorage.getItem('username') || '');
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    setUsername('');
+    navigate('/');
+  };
+
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Welcome navigate={navigate} username={username} handleLogout={handleLogout} />} />
+        <Route path="/register" element={<Register setUsername={setUsername} />} />
+        <Route path="/login" element={<Login setUsername={setUsername} />} />
+        <Route
+          path="/main"
+          element={
+            <ProtectedRoute>
+              <Main />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+
+      <footer className="footer">
+        {username ? <span className="muted">Conectado como <strong>{username}</strong></span> : <span className="muted">No conectado</span>}
+      </footer>
+    </>
   );
 }
 
-export default App;
+
+export default function App() {
+  return (
+    <Router>
+      <AppWrapper />
+    </Router>
+  );
+}

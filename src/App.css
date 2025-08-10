@@ -1,38 +1,148 @@
-.App {
-  text-align: center;
+/* src/App.css - Dark minimal, mobile-first (corregido) */
+
+/* Variables */
+:root{
+  --bg: #121418;
+  --card-bg: rgba(255,255,255,0.03);
+  --muted: rgba(230,238,248,0.68);
+  --text: #e6eef8;
+  --accent-1: #4f9cff;
+  --accent-2: #2b7bff;
+  --btn-ghost-border: rgba(255,255,255,0.06);
+  --shadow: 0 8px 30px rgba(2,6,23,0.6);
+  --radius: 12px;
+  --max-width: 520px;
+  --card-padding: 28px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+/* Reset y base */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* ---------- Centro / Welcome ---------- */
+.center-area {
+  min-height: calc(100vh - 64px);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 22px;
+}
+
+/* Tarjeta principal (reutilizable para welcome y formulario) */
+.card {
+  width: 100%;
+  max-width: var(--max-width);
+  background: linear-gradient(180deg, var(--card-bg), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: var(--shadow);
+  padding: var(--card-padding);
+  border-radius: calc(var(--radius) + 2px);
+  text-align: center;
+  backdrop-filter: blur(6px);
+}
+
+/* Títulos y texto */
+.brand { margin: 0 0 6px; font-size: 1.5rem; letter-spacing: -0.02em; color: var(--text); }
+.lead { margin: 0 0 18px; font-size: 0.95rem; color: var(--muted); }
+
+/* ---------- Botones ---------- */
+.actions { display: flex; gap: 10px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  min-width: 140px;
+  transition: transform .08s ease, box-shadow .12s ease, opacity .12s;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.35);
+  background-clip: padding-box;
+}
+.btn.primary { background: linear-gradient(90deg,var(--accent-1),var(--accent-2)); color: white; }
+.btn.ghost { background: transparent; border: 1px solid var(--btn-ghost-border); color: var(--text); }
+.btn:active { transform: translateY(-1px); } 
+.btn:hover { transform: translateY(-3px); }
+
+/* ---------- Formularios (Login / Register) ---------- */
+/* Mantener estructura: main.center-area > div.card > div.form-container */
+.form-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;               /* centra horizontalmente dentro de .card */
+  padding: 0;                   /* .card ya provee padding */
+  display: block;               /* importante: no forzar flex aquí */
+}
+
+/* Título del formulario */
+.form-container h2 { margin: 0 0 12px; color: var(--text); }
+
+/* Formulario interno */
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* Inputs estilo consistente y ocupando 100% */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+select {
+  width: 100%;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.95rem;
+  outline: none;
+  -webkit-appearance: none; /* evita estilos por defecto en iOS */
+}
+
+/* Placeholder y focus */
+input::placeholder { color: rgba(230,238,248,0.45); }
+input:focus, select:focus { border-color: rgba(75,140,255,0.9); box-shadow: 0 6px 16px rgba(43,123,255,0.12); }
+
+/* Botón dentro del form */
+.form-container button {
+  margin-top: 6px;
+  width: 100%;
+  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
   color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
 }
 
-.App-link {
-  color: #61dafb;
+/* Mensajes de feedback */
+.message { margin-top: 8px; font-size: 0.95rem; text-align:center; }
+.message.error { color: #ffb4b4; }
+.message.ok { color: #b7f3c4; }
+
+/* ---------- Footer ---------- */
+.footer {
+  height: 64px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.muted { color: var(--muted); }
+
+/* ---------- Helpers y responsive ---------- */
+a { color: inherit; text-decoration: none; }
+@media (min-width: 700px) {
+  .card { padding: 36px; max-width: 640px; border-radius: 16px; }
+  .brand { font-size: 1.8rem; }
+  .btn { min-width: 160px; padding: 12px 18px; }
+  .form-container { max-width: 520px; padding: 0; }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Forzado: inputs del form no rompen en ios */
+input, button { -webkit-tap-highlight-color: transparent; }
