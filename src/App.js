@@ -6,6 +6,9 @@ import Register from './pages/Register';
 import Main from './pages/Main';
 import ProtectedRoute from './components/ProtectedRoutes';
 import './App.css';
+import NewTraining from './pages/NewTraining';
+import TrainingWizard from './pages/TrainingWizard';
+
 
 
 function Welcome({ navigate, username, handleLogout }) {
@@ -63,6 +66,12 @@ function AppWrapper() {
             </ProtectedRoute>
           }
         />
+        <Route path='/newTraining' 
+          element= {
+            <TrainingWizard></TrainingWizard>
+          }    
+        />
+        
       </Routes>
 
       <footer className="footer">

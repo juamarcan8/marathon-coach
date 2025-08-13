@@ -1,0 +1,158 @@
+/* src/pages/NewTraining.css
+   Estilos específicos para la página NewTraining
+   Usa variables definidas en App.css (--bg, --card-bg, --accent-1, etc.)
+*/
+
+:root {
+  /* Fallbacks si no vienen de App.css */
+  --bg: #121418;
+  --card-bg: rgba(255,255,255,0.03);
+  --text: #e6eef8;
+  --muted: rgba(230,238,248,0.68);
+  --accent-1: #4f9cff;
+  --accent-2: #2b7bff;
+  --btn-ghost-border: rgba(255,255,255,0.06);
+}
+
+/* Aseguramos que el area ya centrada se vea bien */
+.center-area {
+  background: transparent; /* que no rompa el background global */
+  padding: 24px;
+}
+
+/* Reusa la tarjeta */
+.card, .form-container {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, var(--card-bg), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.04);
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.6);
+}
+
+/* Título */
+.form-container h2 {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+/* El form se organiza en columna */
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Wrappers para selects con estilo "custom" */
+.field {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+/* Select estilizado */
+.custom-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  padding: 12px 44px 12px 14px; /* espacio para el icono a la derecha */
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  color: var(--text);
+  font-size: 0.98rem;
+  outline: none;
+  transition: box-shadow .12s ease, border-color .12s ease, transform .06s;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.4);
+}
+
+/* Focus visible */
+.custom-select:focus {
+  border-color: rgba(75,140,255,0.95);
+  box-shadow: 0 8px 22px rgba(43,123,255,0.12);
+  transform: translateY(-1px);
+}
+
+/* Arrow (icono) en la derecha */
+.field::after {
+  content: '';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  background-image: linear-gradient(45deg, rgba(255,255,255,0.9) 50%, transparent 50%),
+                    linear-gradient(-45deg, rgba(255,255,255,0.9) 50%, transparent 50%);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 8px 8px;
+  opacity: 0.85;
+}
+
+/* Label pequeño encima (opcional) */
+.field-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Botón generar */
+.generate-btn {
+  margin-top: 6px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  color: white;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(43,123,255,0.12);
+}
+
+/* Pequeño mensaje de ayuda */
+.help {
+  font-size: 0.88rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Forzar color y fondo de las option (mejora en la mayoría de navegadores de escritorio) */
+.custom-select {
+  color: var(--text);               /* texto visible en el select */
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+}
+
+/* Estilos para las opciones dentro del desplegable */
+.custom-select option {
+  background-color: #131416;        /* fondo oscuro del dropdown */
+  color: var(--text);               /* texto claro */
+}
+
+/* Opciones seleccionadas (cuando aparecen marcadas en algunos navegadores) */
+.custom-select option:checked {
+  background-color: rgba(78, 77, 77, 0.623); /* color leve para la opción seleccionada */
+  color: var(--text);
+}
+
+/* Placeholder (la opción con value="") */
+.custom-select option[value=""] {
+  color: rgba(230,238,248,0.5);
+}
+
+/* Algunas mejoras cross-browser */
+.custom-select::-ms-expand { display: none; } /* quitar flecha IE */
+.custom-select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
+
+
+/* Responsive: más separación en pantallas grandes */
+@media(min-width: 700px) {
+  .form-container { padding: 28px; }
+}
