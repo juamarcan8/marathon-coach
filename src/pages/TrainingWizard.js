@@ -2,6 +2,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import './TrainingWizard.css';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 
 // Helper: convierte "HH:MM:SS", "H:MM", "MM:SS" o "MM" a minutos (número, float)
 function parseTimeToMinutes(input) {
@@ -49,6 +50,8 @@ function computeDaysAndWeeksFromDate(dateString) {
 }
 
 export default function TrainingWizard() {
+
+  const navigate = useNavigate();
   const steps = [
     { key: 'race_type', title: '¿Qué carrera quieres preparar?' },
     { key: 'level', title: '¿Cuál es tu nivel?' },
@@ -90,6 +93,7 @@ export default function TrainingWizard() {
   const [plan, setPlan] = useState(null);
   const sliderRef = useRef(null);
 
+
   const goNext = () => { if (stepIndex < steps.length - 1) setStepIndex(stepIndex + 1); };
   const goPrev = () => { if (stepIndex > 0) setStepIndex(stepIndex - 1); };
 
@@ -112,6 +116,7 @@ export default function TrainingWizard() {
         if (!info) return 'Fecha inválida.';
         if (info.days <= 0) return 'La fecha debe ser futura.';
         if (info.weeks < 1) return 'Necesitas al menos 1 semana hasta la carrera.';
+        if (info.weeks > 26) return 'No se puede generar un plan de más de 26 semanas.';
         return null;
       case 'target_time':
         if (f.target_time && parseTimeToMinutes(f.target_time) === null) return 'Tiempo objetivo inválido.';
@@ -145,6 +150,7 @@ export default function TrainingWizard() {
     }
 
     const payload = {
+      userId : localStorage.getItem('userId'),
       race_type: formState.race_type,
       level: formState.level,
       days_per_week: Number(formState.days_per_week),
@@ -155,20 +161,9 @@ export default function TrainingWizard() {
       recent_5k_minutes: formState.recent_5k ? parseTimeToMinutes(formState.recent_5k) : null
     };
     console.log(payload)
-    try {
-      setLoading(true);
-      setPlan(null);
-      console.log('Boton Pulsado');
-      const res = await axios.post('http://localhost:4000/api/generate-plan', payload, { timeout: 120000 });
-      if (res.data?.success && res.data?.data) setPlan(res.data.data);
-      else if (res.data) setPlan(res.data);
-      else setError('Respuesta inesperada del servidor.');
-    } catch (err) {
-      console.error(err);
-      setError(err.response?.data?.error || err.message || 'Error generando plan');
-    } finally {
-      setLoading(false);
-    }
+    localStorage.setItem('pending_plan_payload', JSON.stringify(payload));
+    setLoading(true);
+    navigate('/generating', { state: payload });
   };
 
   const renderStepContent = (index) => {

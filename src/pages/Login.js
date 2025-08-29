@@ -18,11 +18,11 @@ function Login({ setUsername }) {
         username: usernameLocal,
         password
       });
-
+      console.log(res.data);
       // Guardamos token y nombre de usuario
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('username', res.data.username);
-
+      localStorage.setItem('userId', res.data.userId);
       // Actualizamos estado en App (si te pasaron setUsername)
       if (typeof setUsername === 'function') setUsername(res.data.username);
 
@@ -39,7 +39,6 @@ function Login({ setUsername }) {
 
   return (
     <main className="center-area">
-      <div className="card">
         <div className="form-container">
           <h2>Iniciar Sesión</h2>
           <form onSubmit={handleLogin}>
@@ -70,7 +69,6 @@ function Login({ setUsername }) {
             </p>
           )}
         </div>
-      </div>
     </main>
   );
 }

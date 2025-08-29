@@ -38,6 +38,7 @@ function Register() {
   };
 
   return (
+    <main className="center-area">
     <div className="form-container">
       <h2>Registro</h2>
       <form onSubmit={handleRegister}>
@@ -80,6 +81,7 @@ function Register() {
         <p style={{ color: isError ? 'red' : 'green' }}>{message}</p>
       )}
     </div>
+    </main>
   );
 }
 

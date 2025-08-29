@@ -8,10 +8,13 @@ import ProtectedRoute from './components/ProtectedRoutes';
 import './App.css';
 import NewTraining from './pages/NewTraining';
 import TrainingWizard from './pages/TrainingWizard';
+import Generating from './pages/Generating';
+import Myplan from './pages/Myplan';
 
 
+function Welcome({ username, handleLogout }) {
+  const navigate = useNavigate();
 
-function Welcome({ navigate, username, handleLogout }) {
   return (
     <main className="center-area">
       <div className="card">
@@ -48,6 +51,7 @@ function AppWrapper() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
+    localStorage.removeItem('userId');
     setUsername('');
     navigate('/');
   };
@@ -68,11 +72,27 @@ function AppWrapper() {
         />
         <Route path='/newTraining' 
           element= {
-            <TrainingWizard></TrainingWizard>
-          }    
+            <ProtectedRoute>
+              <TrainingWizard></TrainingWizard>
+          
+            </ProtectedRoute>
+            }    
         />
-        
-      </Routes>
+        <Route path='/generating' 
+                  element= {
+                    <ProtectedRoute>
+                      <Generating/>
+                    </ProtectedRoute>
+                    }    
+                />
+        <Route path='/plan' 
+                  element= {
+                    <ProtectedRoute>
+                      <Myplan/>
+                    </ProtectedRoute>
+                    }    
+                />
+        </Routes>
 
       <footer className="footer">
         {username ? <span className="muted">Conectado como <strong>{username}</strong></span> : <span className="muted">No conectado</span>}

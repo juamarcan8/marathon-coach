@@ -1,0 +1,120 @@
+/* Generating.css - integrado con el tema oscuro de App.css */
+
+/* Wrapper centrado (mobile-first) */
+.generating-wrap {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* Card: coincide con el estilo de otras cards */
+.generating-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 26px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+  backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+  text-align: center;
+  color: var(--text);
+}
+
+/* Logo giratorio */
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: 12px;
+  padding: 8px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 8px 28px rgba(2,6,23,0.45);
+  animation: spin 1.6s linear infinite;
+}
+
+/* Pausar animación si se añade clase .paused */
+.logo.paused {
+  animation-play-state: paused;
+  opacity: 0.95;
+}
+
+/* keyframes */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Área central: spinner + texto */
+.generating-center {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 6px;
+}
+
+/* fila que contiene spinner + texto */
+.spinner-row {
+  display:flex;
+  gap: 12px;
+  align-items:center;
+  justify-content:center;
+  flex-direction: column;
+}
+
+/* texto del loader */
+.generating-text {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Bloque de estado (error/ok) */
+.status-block {
+  display:flex;
+  gap: 12px;
+  align-items:center;
+  justify-content:center;
+  flex-direction: column;
+}
+
+/* Mensaje de error */
+.generating-error {
+  color: #ffb4b4;
+  background: rgba(255,80,80,0.04);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,80,80,0.08);
+  font-weight: 700;
+  max-width: 100%;
+}
+
+/* Mensaje OK */
+.generating-ok {
+  color: #b7f3c4;
+  background: rgba(11,90,46,0.04);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(11,90,46,0.08);
+  font-weight: 700;
+}
+
+/* Pequeños ajustes para los botones */
+.btn.small {
+  padding: 8px 12px;
+  font-size: 0.92rem;
+}
+
+/* Responsive */
+@media (min-width: 700px) {
+  .logo { width: 96px; height: 96px; }
+  .generating-card { padding: 34px; }
+}
