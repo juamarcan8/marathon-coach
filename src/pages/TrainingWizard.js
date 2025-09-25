@@ -160,7 +160,6 @@ export default function TrainingWizard() {
       target_time_minutes: formState.target_time ? parseTimeToMinutes(formState.target_time) : null,
       recent_5k_minutes: formState.recent_5k ? parseTimeToMinutes(formState.recent_5k) : null
     };
-    console.log(payload)
     localStorage.setItem('pending_plan_payload', JSON.stringify(payload));
     setLoading(true);
     navigate('/generating', { state: payload });

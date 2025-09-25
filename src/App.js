@@ -10,6 +10,7 @@ import NewTraining from './pages/NewTraining';
 import TrainingWizard from './pages/TrainingWizard';
 import Generating from './pages/Generating';
 import Myplan from './pages/Myplan';
+import WorkoutDetail from './pages/TrainingDetails';
 
 
 function Welcome({ username, handleLogout }) {
@@ -92,8 +93,14 @@ function AppWrapper() {
                     </ProtectedRoute>
                     }    
                 />
+        <Route path='/training-details' 
+                  element= {
+                    <ProtectedRoute>
+                      <WorkoutDetail/>
+                    </ProtectedRoute>
+                    }    
+                />
         </Routes>
-
       <footer className="footer">
         {username ? <span className="muted">Conectado como <strong>{username}</strong></span> : <span className="muted">No conectado</span>}
       </footer>

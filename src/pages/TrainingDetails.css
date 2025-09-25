@@ -1,0 +1,188 @@
+/* TrainingDetails.css - estilo oscuro / PWA coherente con TrainingWizard.css */
+
+:root{
+    --bg: #121418;
+    --card-bg: rgba(255,255,255,0.03);
+    --panel-bg: rgba(255,255,255,0.02);
+    --text: #e6eef8;
+    --muted: rgba(230,238,248,0.65);
+    --accent-1: #4f9cff;
+    --accent-2: #2b7bff;
+    --accent-600: #2b7bff;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 12px 36px rgba(2,6,23,0.6);
+    --glass-border: rgba(255,255,255,0.04);
+    --success: #16a34a;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', 'Courier New', monospace;
+  }
+  
+  /* Page wrapper */
+  .workout-detail {
+    min-height: 100vh;
+    padding: 18px;
+    background: linear-gradient(180deg, #0f1417 0%, #121418 100%);
+    color: var(--text);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+  
+  /* Card */
+  .workout-card {
+    width: 100%;
+    max-width: 980px;
+    margin: 10px auto;
+    background: linear-gradient(180deg, var(--card-bg), rgba(255,255,255,0.01));
+    border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow);
+    padding: 18px;
+    overflow: hidden;
+  }
+  
+  /* Header */
+  .workout-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .workout-title {
+    font-size:1.1rem;
+    font-weight:700;
+    margin:0;
+    color: var(--text);
+  }
+  .workout-meta {
+    font-size:13px;
+    color: var(--muted);
+    margin-top:6px;
+  }
+  
+  /* Right side summary */
+  .workout-sideinfo {
+    text-align:right;
+    min-width:120px;
+  }
+  .small { font-size:12px; color:var(--muted); }
+  .big { font-size:18px; font-weight:700; color:var(--text); }
+  
+  /* Grid: description + aside */
+  .workout-grid { margin-top: 16px; display:block; }
+  @media(min-width:880px){
+    .workout-grid { display:grid; grid-template-columns: 1.7fr 420px; gap: 16px; align-items:start; }
+  }
+  
+  /* Description panel */
+  .description-section {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.02);
+  }
+  .description-section h2 { font-size:15px; margin:0 0 8px 0; color:var(--text); }
+  .prose { color: var(--text); line-height:1.6; font-size:14px; }
+  .prose ol { padding-left:18px; margin:0; }
+  .prose li { margin-bottom:8px; }
+  
+  /* Segments table */
+  .segments-table {
+    margin-top: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.03);
+    background: rgba(255,255,255,0.01);
+  }
+  .segments-table table {
+    width:100%;
+    border-collapse: collapse;
+    color: var(--text);
+    font-size: 13px;
+  }
+  .segments-table thead th {
+    text-align:left;
+    font-size:12px;
+    padding: 10px;
+    color: var(--muted);
+    background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    font-weight:600;
+  }
+  .segments-table tbody td {
+    padding: 10px;
+    border-top: 1px solid rgba(255,255,255,0.02);
+    vertical-align: top;
+  }
+  
+  /* Aside (right column) */
+  .aside {
+    background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.02);
+    position: sticky;
+    top: 18px;
+    height: fit-content;
+  }
+  .meta-row { margin-bottom:12px; }
+  .meta-row .text-sm { display:block; color:var(--muted); margin-bottom:6px; font-size:13px; }
+  .meta-row .value { font-weight:700; color:var(--text); }
+  
+  /* Status */
+  .status-ok { display:inline-block; padding:6px 10px; border-radius:999px; color:var(--success); background: rgba(22,163,74,0.06); border: 1px solid rgba(22,163,74,0.08); font-weight:700; }
+  .status-pending { display:inline-block; padding:6px 10px; border-radius:999px; color:var(--warn); background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.08); font-weight:700; }
+  
+  /* Actions */
+  .action-column { display:flex; flex-direction:column; gap:10px; margin-top:8px; }
+  .btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:10px 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight:700;
+    color: #fff;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    box-shadow: 0 8px 22px rgba(43,123,255,0.12);
+  }
+  .btn.ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.04);
+    color: var(--muted);
+    box-shadow: none;
+  }
+  .btn.small { padding:8px 10px; border-radius:8px; font-weight:600; }
+  
+  /* Download / edit ghost buttons */
+  .btn.ghost:hover { color: var(--text); border-color: rgba(43,123,255,0.12); }
+  
+  /* Mini helpers */
+  .text-muted { color:var(--muted); font-size:13px; }
+  .kv { display:flex; justify-content:space-between; gap:8px; align-items:center; }
+  .code { font-family: var(--mono); background: rgba(255,255,255,0.02); padding:6px 8px; border-radius:8px; font-size:13px; color:var(--text); }
+  
+  /* Progress bar */
+  .progress-wrap { margin-top:12px; }
+  .progress-bar { width:100%; height:8px; background: rgba(255,255,255,0.02); border-radius:999px; overflow:hidden; border: 1px solid rgba(255,255,255,0.02); }
+  .progress-fill { height:100%; width:0%; background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); transition: width 420ms cubic-bezier(.22,.9,.37,1); }
+  
+  /* Responsive tweaks */
+  @media(max-width:880px){
+    .workout-card { padding: 14px; border-radius: 12px; }
+    .workout-sideinfo { text-align:left; margin-top:8px; }
+    .btn { width:100%; }
+    .action-column { gap:8px; }
+    .aside { position: static; }
+  }
+  
+  /* Focus and accessibility */
+  .btn:focus { outline: 3px solid rgba(75,140,255,0.12); outline-offset:3px; transform: translateY(-1px); }
+  
+  /* small visual polish */
+  .prose li::marker { color: var(--accent-2); font-weight:700; }
+  
