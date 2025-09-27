@@ -24,12 +24,13 @@ export default function Main() {
     return (
         <main class = 'center-area'>
             <div>
-            <h1>Página principal</h1>
+
             <p>Bienvenido {username}</p>
             <p>{message}</p>
 
             <div className="actions">
                 <button className="btn primary" onClick={() => navigate('/newTraining')}>Nuevo plan de entrenamiento</button>
+                <button className="btn primary" onClick={() => navigate('/plan')}>Sigue tu plan</button>
             </div>
 
          
