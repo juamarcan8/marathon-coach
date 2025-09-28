@@ -22,7 +22,7 @@ function Register() {
     }
 
     try {
-      const res = await axios.post('http://localhost:4000/register', {
+      const res = await axios.post('https://marathon-coach-backend-1.onrender.com/register', {
         username,
         password,
         email,

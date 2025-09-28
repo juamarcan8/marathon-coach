@@ -14,7 +14,7 @@ function Login({ setUsername }) {
     e.preventDefault();
 
     try {
-      const res = await axios.post('http://localhost:4000/login', {
+      const res = await axios.post('https://marathon-coach-backend-1.onrender.com/login', {
         username: usernameLocal,
         password
       });

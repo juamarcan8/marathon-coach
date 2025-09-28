@@ -25,14 +25,21 @@ export default function Myplan() {
           return;
         }
 
-        const res = await axios.get('http://localhost:4000/api/workouts', {
+        const res = await axios.get('https://marathon-coach-backend-1.onrender.com/api/workouts', {
           headers: { Authorization: `Bearer ${token}` }
         });
 
         const data = res.data?.workouts ?? res.data ?? [];
-        const arr = Array.isArray(data) ? data : [];
-        arr.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+        const arr = (Array.isArray(data) ? data : []).map(w => {
+          let normalizedDate = '';
+          if (w.date) {
+            // Extraemos solo YYYY-MM-DD
+            normalizedDate = w.date.split('T')[0];
+          }
+          return { ...w, date: normalizedDate };
+        });
 
+        arr.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
         setWorkouts(arr);
 
         const today = new Date();
@@ -82,12 +89,8 @@ export default function Myplan() {
     }
   };
 
-  const goPrevMonth = () => {
-    setSelectedMonthIndex(i => Math.max(0, i - 1));
-  };
-  const goNextMonth = () => {
-    setSelectedMonthIndex(i => Math.min(months.length - 1, i + 1));
-  };
+  const goPrevMonth = () => setSelectedMonthIndex(i => Math.max(0, i - 1));
+  const goNextMonth = () => setSelectedMonthIndex(i => Math.min(months.length - 1, i + 1));
 
   const currentMonth = months.length ? months[selectedMonthIndex] : buildEmptyMonthForToday();
 
@@ -203,7 +206,7 @@ function MiniMonthCalendar({ year, month, workoutsForMonth = [], onSelectDate })
   const firstWeekday = (jsDay + 6) % 7; // lunes=0 .. domingo=6
   const lastDay = new Date(year, month, 0).getDate();
 
-  const workoutDates = new Set((workoutsForMonth || []).map(w => w.date));
+  const workoutDates = new Set((workoutsForMonth || []).map(w => w.date.split('T')[0]));
 
   const cells = [];
   for (let i = 0; i < firstWeekday; i++) cells.push(null);

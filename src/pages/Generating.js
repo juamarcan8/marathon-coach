@@ -36,7 +36,7 @@ export default function Generating(){
       try {
         console.log('[Generating] enviando payload:', initialPayload);
         const res = await axios.post(
-          'http://localhost:4000/api/generate-plan',
+          'https://marathon-coach-backend-1.onrender.com/api/generate-plan',
           initialPayload,
           {
             timeout: 600000   ,

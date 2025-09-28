@@ -13,7 +13,7 @@ export default function Main() {
         const token = localStorage.getItem('token');
 
         axios
-        .get('http://localhost:4000/home-data', {
+        .get('https://marathon-coach-backend-1.onrender.com/home-data', {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(res => setMessage(res.data.message))

@@ -1,4 +1,3 @@
-// WorkoutDetail.jsx
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -15,45 +14,32 @@ export default function WorkoutDetail() {
   const [error, setError] = useState(null);
 
   function parseDescription(desc) {
-    console.log(desc)
     if (!desc) return [];
-
-    if (Array.isArray(desc)) return desc;
-
-    if (typeof desc === 'object') {
-      // Si tiene un campo steps o steps_array o items
-      if (Array.isArray(desc.steps)) return desc.steps;
-      if (Array.isArray(desc.items)) return desc.items;
-      if (desc.text && typeof desc.text === 'string') {
-        return [desc.text];
-      }
-      if (Array.isArray(desc.segments)) return desc.segments.map(s => ({ ...s, __from_segment: true }));
-      return [desc];
-    }
-
-    // Si es string, dividir en pasos numerados o saltos de línea
+    if (Array.isArray(desc)) return desc; // Database shows description is an array of strings
     if (typeof desc === 'string') {
       const parts = desc
         .split(/\r?\n|(?<=\.\s)|(?<=\d+\.\s)/)
         .map(s => s.trim())
         .filter(Boolean);
-      // si al final el array solo tiene 1 elemento y es muy largo, devolverlo como único string
       return parts.length ? parts : [desc];
     }
-
-    // cualquier otro tipo -> convertir a string
+    if (typeof desc === 'object') {
+      if (Array.isArray(desc.steps)) return desc.steps;
+      if (Array.isArray(desc.items)) return desc.items;
+      if (desc.text && typeof desc.text === 'string') return [desc.text];
+      if (Array.isArray(desc.segments)) return desc.segments.map(s => ({ ...s, __from_segment: true }));
+      return [JSON.stringify(desc)];
+    }
     return [String(desc)];
   }
 
-  // formatea un item objeto tipo segmento/step a JSX legible
   function renderObjectStep(item) {
-    // campos frecuentes: text, step, type, reps, distance_km, time_min, pace_min_km, note
     if (typeof item !== 'object' || item === null) return String(item);
 
-    if (item.text || item.step) {
-      return item.text || item.step;
-    }
+    // Handle object with 'text' or 'step' property
+    if (item.text || item.step) return item.text || item.step;
 
+    // Handle structured workout data
     if (item.type) {
       const parts = [];
       parts.push(item.type);
@@ -65,7 +51,7 @@ export default function WorkoutDetail() {
       return parts.join(' ');
     }
 
-    // Si tiene estructura de segment con time_min_fast/time_min_easy
+    // Handle fast/easy pacing
     if (item.time_min_fast || item.time_min_easy) {
       const fast = item.time_min_fast ? `${item.time_min_fast}min fast` : '';
       const easy = item.time_min_easy ? `${item.time_min_easy}min easy` : '';
@@ -74,12 +60,11 @@ export default function WorkoutDetail() {
       return [rep, fast, easy, pace].filter(Boolean).join(' ');
     }
 
-    // Fallback: mostrar JSON formateado
-    return null;
+    // Fallback: Convert any other object to a string
+    return JSON.stringify(item, null, 2);
   }
 
   useEffect(() => {
-    // fallback desde localStorage si no viene por location.state
     if (!workout) {
       const stored = localStorage.getItem('current_workout');
       if (stored) {
@@ -92,27 +77,11 @@ export default function WorkoutDetail() {
         }
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     if (workout) {
       localStorage.setItem('current_workout', JSON.stringify(workout));
-    }
-  }, [workout]);
-
-  // útil para depuración: ver en consola la estructura recibida
-  useEffect(() => {
-    if (workout) {
-      console.groupCollapsed('[WorkoutDetail] workout debug');
-      console.log('workout (obj):', workout);
-      try { console.log('workout (json):', JSON.stringify(workout, null, 2)); } catch (e) {}
-      const descRaw = workout.description ?? workout.notes ?? workout.description_raw ?? null;
-      console.log('raw description:', descRaw);
-      const parsed = parseDescription(descRaw);
-      console.log('parsed description items:', parsed);
-      if (Array.isArray(parsed)) console.table(parsed.map((it, i) => ({ idx: i, type: typeof it, value: (typeof it === 'object' ? JSON.stringify(it) : it) })));
-      console.groupEnd();
     }
   }, [workout]);
 
@@ -124,7 +93,6 @@ export default function WorkoutDetail() {
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        // intenta sincronizar con backend si existe endpoint
         await axios.post('http://localhost:4000/api/mark-workout-complete', { workoutId: workout.id, completed: toggle }, {
           headers: { Authorization: `Bearer ${token}` },
           timeout: 10000
@@ -136,7 +104,6 @@ export default function WorkoutDetail() {
     } catch (e) {
       console.warn('sync failed:', e?.message || e);
       setError('No se pudo sincronizar con el servidor — guardado localmente.');
-      // marcar localmente igual
       const next = { ...workout, completed_at: toggle ? new Date().toISOString() : null };
       setWorkout(next);
       localStorage.setItem('current_workout', JSON.stringify(next));
@@ -177,6 +144,11 @@ export default function WorkoutDetail() {
   const descriptionItems = parseDescription(descSource);
   const segments = workout.segments ?? (Array.isArray(descriptionItems) ? descriptionItems.filter(it => typeof it === 'object' && (it.type || it.reps || it.distance_km || it.time_min)) : []);
 
+  // Extract advice text
+  const adviceText = workout.advice && typeof workout.advice === 'object' && workout.advice.text
+    ? workout.advice.text
+    : (typeof workout.advice === 'string' ? workout.advice : '');
+
   return (
     <main className="workout-detail">
       <div className="workout-card" role="region" aria-label="Detalle del entrenamiento">
@@ -193,8 +165,7 @@ export default function WorkoutDetail() {
           </div>
         </header>
 
-        <div className="workout-grid">
-          <div className="description-section">
+        
             <h2>Descripción</h2>
             <div className="prose">
               {Array.isArray(descriptionItems) && descriptionItems.length ? (
@@ -202,41 +173,24 @@ export default function WorkoutDetail() {
                   {descriptionItems.map((d, i) => {
                     if (!d && d !== 0) return null;
 
-                    if (typeof d === 'string') {
-                      return <li key={i}>{d}</li>;
+                    const rendered = renderObjectStep(d);
+
+                    if (typeof rendered === 'string' || typeof rendered === 'number') {
+                      return <li key={i}>{rendered}</li>;
                     }
 
-                    if (typeof d === 'object') {
-                      const human = renderObjectStep(d);
-                      if (typeof human === 'string' && human.length) {
-                        return <li key={i}>{human}</li>;
-                      }
-                      // si renderObjectStep devolvió null -> mostrar JSON formateado
-                      return (
-                        <li key={i}>
-                          <pre style={{
-                            whiteSpace: 'pre-wrap',
-                            fontSize: 13,
-                            background: 'rgba(255,255,255,0.02)',
-                            padding: 10,
-                            borderRadius: 8,
-                            color: 'var(--text)'
-                          }}>
-                            {JSON.stringify(d, null, 2)}
-                          </pre>
-                        </li>
-                      );
-                    }
-
-                    return <li key={i}>{String(d)}</li>;
+                    return (
+                      <li key={i}>
+                        <pre>{JSON.stringify(d, null, 2)}</pre>
+                      </li>
+                    );
                   })}
                 </ol>
               ) : (
                 <p className="text-muted">No hay descripción detallada para este entrenamiento.</p>
               )}
-            </div>
+          
 
-            {/* Si además tienes segments explícitos, muéstralos en tabla */}
             {segments.length > 0 && (
               <div className="segments-table" style={{ marginTop: 12 }}>
                 <table>
@@ -266,15 +220,14 @@ export default function WorkoutDetail() {
               </div>
             )}
 
-            {workout.advice && (
+            {adviceText && (
               <div style={{ marginTop: 14 }}>
                 <h3>Consejos</h3>
-                <p className="prose">{workout.advice}</p>
+                <p className="prose">{adviceText}</p>
               </div>
             )}
-          </div>
+          
 
-          <aside className="aside">
             <div className="meta-row">
               <span className="text-sm">Intensidad</span>
               <div className="value">{workout.intensity || '—'}</div>
@@ -295,11 +248,9 @@ export default function WorkoutDetail() {
               <button className="btn" onClick={() => markCompleted(!completed)} disabled={saving}>
                 {saving ? 'Guardando...' : (completed ? 'Marcar como no realizado' : 'Marcar como completado')}
               </button>
-              <button className="btn ghost" onClick={downloadJSON} style={{ marginTop: 6 }}>Descargar JSON</button>
             </div>
 
             {error && <div style={{ marginTop: 12, color: '#ffb4b4' }}>{error}</div>}
-          </aside>
         </div>
       </div>
     </main>
