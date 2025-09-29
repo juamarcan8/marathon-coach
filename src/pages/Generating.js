@@ -39,7 +39,7 @@ export default function Generating(){
           'https://marathon-coach-backend-1.onrender.com/api/generate-plan',
           initialPayload,
           {
-            timeout: 600000   ,
+            timeout: 1000000   ,
             signal: controller.signal, // usa signal cuando axios lo soporte en tu versión
             cancelToken: source ? source.token : undefined,
             headers: { 'Content-Type': 'application/json' }
